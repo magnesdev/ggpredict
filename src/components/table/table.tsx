@@ -58,7 +58,13 @@ const CustomTable = () => {
     setSearchUser,
   } = useTable();
 
-  const { data } = useData({ page, rowsPerPage, order, orderBy, searchUser });
+  const { data, isLoading, isFetching } = useData({
+    page,
+    rowsPerPage,
+    order,
+    orderBy,
+    searchUser,
+  });
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -127,36 +133,45 @@ const CustomTable = () => {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {data?.content &&
-              data.content.map((row: any) => {
-                return (
-                  <TableRow hover role='checkbox' tabIndex={-1} key={row.nick}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.id !== 'country' &&
-                            (column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : value)}
-                          {column.id === 'country' &&
-                            typeof value === 'string' && (
-                              <img
-                                loading='lazy'
-                                width='20'
-                                src={`https://flagcdn.com/w20/${value.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/w40/${value.toLowerCase()}.png 2x`}
-                                alt=''
-                              />
-                            )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
+          {isFetching ? (
+            <div style={{ textAlign: 'center', width: '100%' }}>loading</div>
+          ) : (
+            <TableBody>
+              {data?.content &&
+                data.content.map((row: any) => {
+                  return (
+                    <TableRow
+                      hover
+                      role='checkbox'
+                      tabIndex={-1}
+                      key={row.nick}
+                    >
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.id !== 'country' &&
+                              (column.format && typeof value === 'number'
+                                ? column.format(value)
+                                : value)}
+                            {column.id === 'country' &&
+                              typeof value === 'string' && (
+                                <img
+                                  loading='lazy'
+                                  width='20'
+                                  src={`https://flagcdn.com/w20/${value.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${value.toLowerCase()}.png 2x`}
+                                  alt=''
+                                />
+                              )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          )}
         </Table>
         <TablePagination
           rowsPerPageOptions={[10, 20, 100]}

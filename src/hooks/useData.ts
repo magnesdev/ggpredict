@@ -40,12 +40,12 @@ const useData = ({
   orderBy,
   searchUser,
 }: useDataProps) => {
-  const { isLoading, data } = useQuery(
+  const { isFetching, isLoading, data } = useQuery(
     ['usersData', page, rowsPerPage, order, orderBy, searchUser],
     () => getPlayers(page, rowsPerPage, order, orderBy, searchUser),
     { keepPreviousData: true }
   );
-  return { data, isLoading };
+  return { data, isLoading, isFetching };
 };
 
 export default useData;
